@@ -1,0 +1,118 @@
+# EX.No: 1
+# AIM:
+# To use commands like tcpdump, netstat, ifconfig, nslookup and traceroute.
+# To capture ping and traceroute PDUs using Wireshark and examine them.
+
+# -----------------------------
+# 1. Check and Install tcpdump
+# -----------------------------
+which tcpdump
+sudo apt install tcpdump
+
+# Switch to superuser
+su
+# (Enter password: 123456)
+sudo -i
+
+# -----------------------------
+# 2. TCPDUMP COMMANDS
+# -----------------------------
+
+# List available interfaces
+tcpdump -D
+
+# Capture packets on all interfaces
+tcpdump -i any
+
+# Capture only 5 packets
+tcpdump -i any -c 5
+
+# Capture packets from specific source IP
+tcpdump -i any -c 5 -nn src 172.16.20.138
+
+# Capture packets to specific destination IP
+tcpdump -i any -c 5 -nn dst 172.16.20.139
+
+# Capture only ICMP packets
+tcpdump -i any -c 5 icmp
+
+# Generate ICMP traffic in another terminal
+ping opensource.com
+
+# -----------------------------
+# 3. NETSTAT COMMANDS
+# -----------------------------
+
+# Show all active connections
+netstat
+
+# List all TCP ports
+netstat -at
+
+# List all UDP ports
+netstat -au
+
+# List listening TCP ports
+netstat -lt
+
+# List listening UDP ports
+netstat -lu
+
+# Show statistics
+netstat -s
+netstat -st
+netstat -su
+
+# -----------------------------
+# 4. IFCONFIG COMMAND
+# -----------------------------
+
+# Display network interface details
+ifconfig
+
+# -----------------------------
+# 5. NSLOOKUP COMMANDS
+# -----------------------------
+
+# DNS lookup for domain
+nslookup annauniv.edu
+
+# Reverse DNS lookup
+nslookup 172.217.26.206
+
+# Lookup all DNS records
+nslookup -type=any annauniv.edu
+
+# Lookup NS record
+nslookup -type=ns annauniv.edu
+
+# -----------------------------
+# 6. TRACEROUTE COMMANDS
+# -----------------------------
+
+# Trace route to domain
+traceroute annauniv.edu
+
+# Trace route to IP
+traceroute 172.16.20.139
+
+# -----------------------------
+# 7. WIRESHARK (Network Protocol Analyzer)
+# -----------------------------
+
+# Install Wireshark
+sudo apt install wireshark
+
+# Open Wireshark
+sudo wireshark
+
+# Apply display filter inside Wireshark:
+# icmp
+
+# Generate traffic to capture ICMP PDUs
+ping www.sudo.com
+traceroute www.google.com
+
+# RESULT:
+# Successfully executed tcpdump, netstat, ifconfig, nslookup and traceroute commands.
+# Captured and examined ICMP (Ping) and Traceroute packets using Wireshark.
