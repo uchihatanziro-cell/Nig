@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+
+int main() {
+    const char *fifo = "myfifo";
+
+    // Create FIFO (ignore error if already exists)
+    mkfifo(fifo, 0666);
+
+    int fd = open(fifo, O_WRONLY);
+    if (fd < 0) {
+        perror("open failed");
+        exit(1);
+    }
+
+    char message[] = "Hello FIFO";
+    write(fd, message, strlen(message) + 1);
+
+    close(fd);
+    return 0;
+}
+
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+int main() {
+    const char *fifo = "myfifo";
+    char buf[50];
+
+    int fd = open(fifo, O_RDONLY);
+    if (fd < 0) {
+        perror("open failed");
+        exit(1);
+    }
+
+    int n = read(fd, buf, sizeof(buf) - 1);
+    if (n > 0) {
+        buf[n] = '\0';   // Null terminate
+        printf("Received: %s\n", buf);
+    }
+
+    close(fd);
+    return 0;
+}
