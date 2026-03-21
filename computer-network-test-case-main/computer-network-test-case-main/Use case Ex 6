@@ -1,0 +1,118 @@
+import java.io.*;
+import java.net.*;
+
+public class serverrarp
+{
+    public static void main(String args[])
+    {
+        try
+        {
+            DatagramSocket server = new DatagramSocket(1309);
+            System.out.println("RARP Server is running...");
+
+            while(true)
+            {
+                byte[] receiveByte = new byte[1024];
+                byte[] sendByte = new byte[1024];
+
+                DatagramPacket receiver =
+                        new DatagramPacket(receiveByte, receiveByte.length);
+
+                server.receive(receiver);
+
+                String macAddress = new String(receiver.getData()).trim();
+
+                InetAddress addr = receiver.getAddress();
+                int port = receiver.getPort();
+
+                // Test case table
+                String mac[] = {
+                        "D4:3D:7E:12:A3:D9",
+                        "AA:BB:CC:DD:EE:FF",
+                        "11:22:33:44:55:66"
+                };
+
+                String ip[] = {
+                        "10.0.3.186",
+                        "192.168.1.10",
+                        "172.16.5.4"
+                };
+
+                String result = "MAC Address not found";
+
+                for(int i=0;i<mac.length;i++)
+                {
+                    if(macAddress.equals(mac[i]))
+                    {
+                        result = ip[i];
+                        break;
+                    }
+                }
+
+                sendByte = result.getBytes();
+
+                DatagramPacket sender =
+                        new DatagramPacket(sendByte, sendByte.length, addr, port);
+
+                server.send(sender);
+
+                System.out.println("Request from client: " + macAddress);
+                System.out.println("Response sent: " + result);
+            }
+        }
+
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+    }
+}
+
+import java.io.*;
+import java.net.*;
+
+public class clientrarp
+{
+    public static void main(String args[])
+    {
+        try
+        {
+            DatagramSocket client = new DatagramSocket();
+
+            InetAddress addr = InetAddress.getByName("127.0.0.1");
+
+            byte[] sendByte = new byte[1024];
+            byte[] receiveByte = new byte[1024];
+
+            BufferedReader in =
+                    new BufferedReader(new InputStreamReader(System.in));
+
+            System.out.println("Enter the Physical Address (MAC):");
+
+            String mac = in.readLine();
+
+            sendByte = mac.getBytes();
+
+            DatagramPacket sender =
+                    new DatagramPacket(sendByte, sendByte.length, addr, 1309);
+
+            client.send(sender);
+
+            DatagramPacket receiver =
+                    new DatagramPacket(receiveByte, receiveByte.length);
+
+            client.receive(receiver);
+
+            String response = new String(receiver.getData()).trim();
+
+            System.out.println("The Logical Address is : " + response);
+
+            client.close();
+        }
+
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+    }
+}
